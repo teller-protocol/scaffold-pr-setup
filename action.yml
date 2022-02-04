@@ -1,0 +1,32 @@
+name: Scaffold PR Setup
+inputs:
+  GH_NPM_TOKEN:
+    required: true
+    type: string
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: 16.13.1
+
+    - name: Use Cache
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.yarn
+          ~/node_modules
+          **/node_modules/**
+        key: ${{ runner.os }}-yarn-cache-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-yarn-cache-${{ hashFiles('**/yarn.lock') }}
+
+    - name: Install Dependencies
+      env:
+        GH_NPM_TOKEN: ${{ inputs.GH_NPM_TOKEN }}
+      run: yarn install --immutable
+      shell: bash
