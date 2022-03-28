@@ -3,6 +3,10 @@ inputs:
   GH_NPM_TOKEN:
     required: true
     type: string
+  immutable:
+    required: false
+    type: boolean
+    default: true
 
 runs:
   using: composite
@@ -25,8 +29,16 @@ runs:
         restore-keys: |
           ${{ runner.os }}-yarn-cache-${{ hashFiles('**/yarn.lock') }}
 
-    - name: Install Dependencies
+    - name: Install Immutable Dependencies
+      if: ${{ inputs.immutable }}
       env:
         GH_NPM_TOKEN: ${{ inputs.GH_NPM_TOKEN }}
       run: yarn install --immutable
+      shell: bash
+ 
+    - name: Install Dependencies
+      if: ${{ !inputs.immutable }}
+      env:
+        GH_NPM_TOKEN: ${{ inputs.GH_NPM_TOKEN }}
+      run: yarn install
       shell: bash
