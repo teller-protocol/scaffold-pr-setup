@@ -3,10 +3,10 @@ inputs:
   GH_NPM_TOKEN:
     required: true
     type: string
-  immutable:
-    required: false
+  skip_install:
+    required: true
     type: boolean
-    default: true
+    default: false
 
 runs:
   using: composite
@@ -30,15 +30,8 @@ runs:
           ${{ runner.os }}-yarn-cache-${{ hashFiles('**/yarn.lock') }}
 
     - name: Install Immutable Dependencies
-      if: ${{ inputs.immutable == 'true' }}
+      if: ${{ inputs.skip_install == 'false' }}
       env:
         GH_NPM_TOKEN: ${{ inputs.GH_NPM_TOKEN }}
       run: yarn install --immutable
-      shell: bash
- 
-    - name: Install Dependencies
-      if: ${{ inputs.immutable == 'false' }}
-      env:
-        GH_NPM_TOKEN: ${{ inputs.GH_NPM_TOKEN }}
-      run: yarn install --mode=update-lockfile
       shell: bash
