@@ -3,6 +3,10 @@ inputs:
   GH_NPM_TOKEN:
     required: true
     type: string
+  checkout_lfs:
+    required: true
+    type: boolean
+    default: false
   skip_install:
     required: true
     type: boolean
@@ -12,6 +16,8 @@ runs:
   using: composite
   steps:
     - uses: actions/checkout@v2
+      with:
+        lfs: ${{ inputs.checkout_lfs }}
 
     - name: Setup Node.js
       uses: actions/setup-node@v2
