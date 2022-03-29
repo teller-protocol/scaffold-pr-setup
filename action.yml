@@ -6,6 +6,9 @@ inputs:
   github_token:
     required: false
     type: string
+  checkout_ref:
+    required: false
+    type: string
   skip_install:
     required: true
     type: boolean
@@ -17,6 +20,7 @@ runs:
     - uses: actions/checkout@v2
       with:
         token: ${{ inputs.github_token }}
+        ref: ${{ inputs.checkout_ref }}
 
     - uses: actions/setup-node@v2
       with:
