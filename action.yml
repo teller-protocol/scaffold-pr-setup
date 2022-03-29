@@ -3,10 +3,9 @@ inputs:
   GH_NPM_TOKEN:
     required: true
     type: string
-  checkout_lfs:
-    required: true
-    type: boolean
-    default: false
+  github_token:
+    required: false
+    type: string
   skip_install:
     required: true
     type: boolean
@@ -17,23 +16,12 @@ runs:
   steps:
     - uses: actions/checkout@v2
       with:
-        lfs: ${{ inputs.checkout_lfs }}
+        token: ${{ inputs.github_token }}
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v2
+    - uses: actions/setup-node@v2
       with:
         node-version: 16.13.1
-
-    - name: Use Cache
-      uses: actions/cache@v2
-      with:
-        path: |
-          ~/.yarn
-          ~/node_modules
-          **/node_modules/**
-        key: ${{ runner.os }}-yarn-cache-${{ hashFiles('**/yarn.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-yarn-cache-${{ hashFiles('**/yarn.lock') }}
+        cache: 'yarn'
 
     - name: Install Immutable Dependencies
       if: ${{ inputs.skip_install == 'false' }}
