@@ -40,5 +40,5 @@ runs:
       if: ${{ inputs.immutable == 'false' }}
       env:
         GH_NPM_TOKEN: ${{ inputs.GH_NPM_TOKEN }}
-      run: yarn install
+      run: yarn install --mode=update-lockfile
       shell: bash
