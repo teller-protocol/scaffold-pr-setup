@@ -30,14 +30,14 @@ runs:
           ${{ runner.os }}-yarn-cache-${{ hashFiles('**/yarn.lock') }}
 
     - name: Install Immutable Dependencies
-      if: ${{ inputs.immutable }}
+      if: ${{ inputs.immutable == 'true' }}
       env:
         GH_NPM_TOKEN: ${{ inputs.GH_NPM_TOKEN }}
       run: yarn install --immutable
       shell: bash
  
     - name: Install Dependencies
-      if: ${{ !inputs.immutable }}
+      if: ${{ inputs.immutable == 'false' }}
       env:
         GH_NPM_TOKEN: ${{ inputs.GH_NPM_TOKEN }}
       run: yarn install
