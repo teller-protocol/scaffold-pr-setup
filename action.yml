@@ -6,6 +6,7 @@ inputs:
   github_token:
     required: false
     type: string
+    default: ${{ github.token }}
   checkout_ref:
     required: false
     type: string
