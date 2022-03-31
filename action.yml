@@ -15,9 +15,6 @@ inputs:
     type: boolean
     default: false
 
-env:
-  GH_NPM_TOKEN: ${{ inputs.GH_NPM_TOKEN }}
-
 runs:
   using: composite
   steps:
@@ -27,11 +24,15 @@ runs:
         ref: ${{ inputs.checkout_ref }}
 
     - uses: actions/setup-node@v2
+      env:
+        GH_NPM_TOKEN: ${{ inputs.GH_NPM_TOKEN }}
       with:
         node-version: 16.13.1
         cache: 'yarn'
 
     - name: Install Immutable Dependencies
       if: ${{ inputs.skip_install == 'false' }}
+      env:
+        GH_NPM_TOKEN: ${{ inputs.GH_NPM_TOKEN }}
       run: yarn install --immutable
       shell: bash
