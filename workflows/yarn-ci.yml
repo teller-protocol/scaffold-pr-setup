@@ -1,0 +1,56 @@
+name: Yarn CI
+
+on:
+  workflow_call:
+    secrets:
+      GH_NPM_TOKEN:
+        required: true
+      GH_CREATE_PR_APP_ID:
+        required: true
+      GH_CREATE_PR_APP_PK:
+        required: true
+
+jobs:
+  update-lock:
+    runs-on: ubuntu-latest
+    # IMPORTANT: setting YARN_ENABLE_SCRIPTS=false is critical to ensure that untrusted
+    # PRs can't add a npm package and then use that to execute untrusted code in
+    # a trusted context. See links at the top of this workflow for further details.
+    # See also: https://github.com/yarnpkg/berry/issues/1679#issuecomment-669937860
+    env:
+      YARN_ENABLE_SCRIPTS: false
+      GH_NPM_TOKEN: ${{ secrets.GH_NPM_TOKEN }}
+    steps:
+      - uses: tibdex/github-app-token@v1
+        id: generate-token
+        with:
+          app_id: ${{ secrets.GH_CREATE_PR_APP_ID }}
+          private_key: ${{ secrets.GH_CREATE_PR_APP_PK }}
+
+      - uses: teller-protocol/scaffold-pr-setup@main
+        with:
+          GH_NPM_TOKEN: ${{ env.GH_NPM_TOKEN }}
+          github_token: ${{ steps.generate-token.outputs.token }}
+          checkout_ref: ${{ github.head_ref }}
+          skip_install: true
+
+      - name: Disable Immutable Yarn Installs
+        run: yarn config set enableImmutableInstalls false
+
+      - name: Generate Updated Lockfile
+        run: yarn install
+
+      - name: Check For Changes
+        run: |
+          if git diff --quiet yarn.lock; then
+            echo "changes_exist=false" >> $GITHUB_ENV
+          else
+            echo "changes_exist=true" >> $GITHUB_ENV
+          fi
+
+      - uses: EndBug/add-and-commit@v9
+        if: env.changes_exist == 'true'
+        with:
+          default_author: github_actions
+          add: yarn.lock
+          message: Update yarn.lock
