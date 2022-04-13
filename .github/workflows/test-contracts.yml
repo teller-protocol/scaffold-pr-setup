@@ -42,7 +42,7 @@ jobs:
           repository: teller-protocol/scaffold-pr-setup
           ref: main
     
-      - uses: ./action.yml
+      - uses: .
         with:
           GH_NPM_TOKEN: ${{ env.GH_NPM_TOKEN }}
 
