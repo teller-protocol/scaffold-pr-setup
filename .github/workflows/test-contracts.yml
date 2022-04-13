@@ -36,6 +36,12 @@ jobs:
     env:
       GH_NPM_TOKEN: ${{ secrets.GH_NPM_TOKEN }}
     steps:
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ github.token }}
+          repository: teller-protocol/scaffold-pr-setup
+          ref: main
+    
       - uses: ./action.yml
         with:
           GH_NPM_TOKEN: ${{ env.GH_NPM_TOKEN }}
