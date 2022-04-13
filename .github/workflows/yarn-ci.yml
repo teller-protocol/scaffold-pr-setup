@@ -27,7 +27,7 @@ jobs:
           app_id: ${{ secrets.GH_CREATE_PR_APP_ID }}
           private_key: ${{ secrets.GH_CREATE_PR_APP_PK }}
 
-      - uses: . # Runs /action.yml in the root of this repo
+      - uses: teller-protocol/scaffold-pr-setup@main
         with:
           GH_NPM_TOKEN: ${{ env.GH_NPM_TOKEN }}
           github_token: ${{ steps.generate-token.outputs.token }}
