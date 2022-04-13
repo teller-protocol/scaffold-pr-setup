@@ -32,9 +32,9 @@ jobs:
           token: ${{ github.token }}
           repository: teller-protocol/scaffold-pr-setup
           ref: main
-          path: scaffold-pr-setup
+          path: ./../scaffold-pr-setup
     
-      - uses: ./scaffold-pr-setup
+      - uses: ./../scaffold-pr-setup
         with:
           GH_NPM_TOKEN: ${{ env.GH_NPM_TOKEN }}
           github_token: ${{ steps.generate-token.outputs.token }}
