@@ -22,6 +22,9 @@ runs:
       with:
         token: ${{ inputs.github_token }}
         ref: ${{ inputs.checkout_ref }}
+        path: ./repo
+        
+    - run: cd ./repo
 
     - uses: actions/setup-node@v2
       env:
