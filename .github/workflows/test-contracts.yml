@@ -43,6 +43,9 @@ jobs:
       - name: Create mnemonic secret
         run: echo ${{ secrets.MNEMONIC }} >> ./packages/hardhat-ts/mnemonic.secret
 
+      - name: Git LFS fetch all 
+        run: git lfs fetch --all
+
       - name: Test Contracts
         env:
           DEFAULT_NETWORK: ${{ secrets.DEFAULT_NETWORK }}
